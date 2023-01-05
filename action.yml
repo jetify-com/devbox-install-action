@@ -1,0 +1,20 @@
+name: 'devbox installer'
+description: 'Install Devbox in your CICD workflow'
+inputs:
+  project-path:  # id of input
+    description: 'Project path to devbox.json. Default to the root directory of the repository.'
+    default: '.'
+runs:
+  using: "composite"
+  steps:
+    - name: Install devbox
+      shell: bash
+      run: |
+        curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
+    - name: Install nix and devbox packages
+      shell: bash
+      run: |
+        NIX_INSTALLER_NO_CHANNEL_ADD=1
+        devbox shell --config=${{ inputs.project-path }} -- echo "Installing nix..." || true
+        source /home/runner/.nix-profile/etc/profile.d/nix.sh
+        devbox shell --config=${{ inputs.project-path }} -- echo "Installing packages..."
