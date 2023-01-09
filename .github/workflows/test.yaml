@@ -1,0 +1,34 @@
+name: test
+# Runs the Devbox installer tests
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  test-action:
+    uses: ./action.yml
+    with:
+      project-path: 'testdata'
+
+  test-action-with-version:
+    uses: ./action.yml
+    with:
+      devbox-version: '0.1.2'
+      project-path: 'testdata'
+
+  test-action-with-cache:
+    uses: ./action.yml
+    with:
+      enable-cache: true
+      project-path: 'testdata'
