@@ -8,6 +8,9 @@ concurrency:
 on:
   pull_request:
   push:
+    paths-ignore:
+      - '**.md'
+
   workflow_call:
   workflow_dispatch:
 
