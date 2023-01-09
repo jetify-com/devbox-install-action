@@ -17,18 +17,30 @@ permissions:
 
 jobs:
   test-action:
-    uses: ./action.yml
-    with:
-      project-path: 'testdata'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          project-path: 'testdata'
 
   test-action-with-version:
-    uses: ./action.yml
-    with:
-      devbox-version: '0.1.2'
-      project-path: 'testdata'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          devbox-version: '0.2.0'
+          project-path: 'testdata'
 
   test-action-with-cache:
-    uses: ./action.yml
-    with:
-      enable-cache: true
-      project-path: 'testdata'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          enable-cache: true
+          project-path: 'testdata'

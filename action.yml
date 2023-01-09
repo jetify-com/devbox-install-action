@@ -14,7 +14,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
     - name: Install devbox
       shell: bash
       run: |
@@ -34,14 +33,15 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-devbox-${{ hashFiles(inputs.project-path + '/devbox.json') }}
+        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.json', inputs.project-path)) }}
 
     - name: Install nix and devbox packages
       shell: bash
       env:
-        DEVBOX_USE_VERSION: inputs.devbox-version
-        NIX_INSTALLER_NO_CHANNEL_ADD: '1'
+        DEVBOX_USE_VERSION: ${{ inputs.devbox-version }}
       run: |
+        NIX_INSTALLER_NO_CHANNEL_ADD=1
+        NIX_BUILD_SHELL=/bin/bash
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing nix..." || true
         source /home/runner/.nix-profile/etc/profile.d/nix.sh
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing packages..."
