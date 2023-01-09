@@ -1,20 +1,47 @@
 name: 'devbox installer'
 description: 'Install Devbox in your CICD workflow'
 inputs:
-  project-path:  # id of input
+  project-path:  # path to folder
     description: 'Project path to devbox.json. Default to the root directory of the repository.'
     default: '.'
+  enable-cache:  # 'true' or 'false'
+    description: 'Caching the entire Nix store in github based on your devbox.json'
+    default: 'false'
+  devbox-version: # version of the devbox cli
+    description: 'Specify devbox CLI version you want to pin to. Default to latest'
+    default: ''
+
 runs:
   using: "composite"
   steps:
+    - uses: actions/checkout@v3
     - name: Install devbox
       shell: bash
       run: |
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
+  
+    - name: Workaround for permission issue
+      if: inputs.enable-cache == 'true'
+      shell: bash
+      run: sudo chmod u+s "$(command -v tar)"
+
+    - name: Mount nix store cache
+      if: inputs.enable-cache == 'true'
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.nix-defexpr
+          ~/.nix-profile
+          /nix/store
+          /nix/var/nix
+        key: ${{ runner.os }}-devbox-${{ hashFiles(inputs.project-path + '/devbox.json') }}
+
     - name: Install nix and devbox packages
       shell: bash
+      env:
+        DEVBOX_USE_VERSION: inputs.devbox-version
+        NIX_INSTALLER_NO_CHANNEL_ADD: '1'
       run: |
-        NIX_INSTALLER_NO_CHANNEL_ADD=1
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing nix..." || true
         source /home/runner/.nix-profile/etc/profile.d/nix.sh
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing packages..."
