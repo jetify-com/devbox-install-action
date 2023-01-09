@@ -39,6 +39,14 @@ runs:
           /nix/var/nix
         key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.json', inputs.project-path)) }}
 
+    - name: devbox version
+      id: devbox-version
+      if: inputs.devbox-version == ''
+      uses: pozetroninc/github-action-get-latest-release@v0.5.0
+      with:
+        repository: jetpack-io/devbox
+        excludes: prerelease, draft
+
     - name: Install nix and devbox packages
       shell: bash
       env:
@@ -46,6 +54,9 @@ runs:
       run: |
         NIX_INSTALLER_NO_CHANNEL_ADD=1
         NIX_BUILD_SHELL=/bin/bash
+        if [[ ! -n $DEVBOX_USE_VERSION ]]; then
+          DEVBOX_USE_VERSION=${{ steps.devbox-version.outputs.release }}
+        fi
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing nix..." || true
         source /home/runner/.nix-profile/etc/profile.d/nix.sh
         devbox shell --config=${{ inputs.project-path }} -- echo "Installing packages..."
