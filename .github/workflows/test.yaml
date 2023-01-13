@@ -35,7 +35,7 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: '0.2.0'
+          devbox-version: '0.2.2'
           project-path: 'testdata'
 
   test-action-with-cache:
