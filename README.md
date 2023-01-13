@@ -35,7 +35,7 @@ jobs:
 | -------------- | ------------------------------------------------------------------- | --------------------- |
 | project-path   | Path to the folder that contains a valid `devbox.json`              | repo's root directory |
 | enable-cache   | Cache the entire Nix store in github based on your `devbox.json`    | false                 |
-| devbox-version | Specify devbox CLI version you want to pin to. Only supports >0.2.0 | latest                |
+| devbox-version | Specify devbox CLI version you want to pin to. Only supports >0.2.2 | latest                |
 
 ### Example Configuration
 
@@ -47,5 +47,5 @@ Here's an example job with all three inputs:
   with:
     project-path: 'path-to-folder'
     enable-cache: true
-    devbox-version: '0.2.0'
+    devbox-version: '0.2.2'
 ```
