@@ -81,6 +81,4 @@ runs:
       run: |
         NIX_INSTALLER_NO_CHANNEL_ADD=1
         NIX_BUILD_SHELL=/bin/bash
-        devbox shell --config=${{ inputs.project-path }} -- echo "Installing nix..." || true
-        source /home/runner/.nix-profile/etc/profile.d/nix.sh
-        devbox shell --config=${{ inputs.project-path }} -- echo "Installing packages..."
+        devbox shell --config=${{ inputs.project-path }} -- echo "Packages installed!"
