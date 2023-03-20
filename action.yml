@@ -66,7 +66,7 @@ runs:
       if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        DEVBOX_USE_VERSION="${{ env.latest_version }}"
+        export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
 
         version=$(devbox version)
@@ -81,4 +81,4 @@ runs:
       run: |
         NIX_INSTALLER_NO_CHANNEL_ADD=1
         NIX_BUILD_SHELL=/bin/bash
-        devbox shell --config=${{ inputs.project-path }} -- echo "Packages installed!"
+        devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
