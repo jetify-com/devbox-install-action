@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install devbox
-        uses: jetpack-io/devbox-install-action@v0.2.0
+        uses: jetpack-io/devbox-install-action@v0.3.0
 
       - name: Run arbitrary commands
         run: devbox shell -- echo "done!"
@@ -43,9 +43,8 @@ Here's an example job with all three inputs:
 
 ```
 - name: Install devbox
-  uses: jetpack-io/devbox-install-action@v0.2.0
+  uses: jetpack-io/devbox-install-action@v0.3.0
   with:
     project-path: 'path-to-folder'
     enable-cache: true
-    devbox-version: '0.2.2'
 ```
