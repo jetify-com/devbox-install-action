@@ -47,3 +47,14 @@ jobs:
         with:
           enable-cache: true
           project-path: 'testdata'
+
+  test-action-with-sha256-checksum:
+    #runs-on: ubuntu-latest
+    runs-on: macos-12-xl
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          devbox-version: 0.5.5
+          sha256-checksum: 'd5e623c032d38250346301040d51bcdca8e6db051c3688cc452e0dda5d95a070'
