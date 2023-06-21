@@ -81,8 +81,10 @@ runs:
         DEVBOX_BINARY="$(find "${HOME}/.cache/devbox/bin" -name devbox)"
         if [ -n "$DEVBOX_SHA256" ]; then
           if command -v "sha256sum" 1>/dev/null 2>&1; then
+            # Linux distributions will likely have this.
             DEVBOX_CHECKSUM="$(sha256sum "$DEVBOX_BINARY" | cut -f1 -d' ')"
           elif command -v "shasum" 1>/dev/null 2>&1; then
+            # MacOS comes with this.
             DEVBOX_CHECKSUM="$(shasum -a 256 "$DEVBOX_BINARY" | cut -f1 -d' ')"
           fi
 
