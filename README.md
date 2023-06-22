@@ -31,12 +31,13 @@ jobs:
 
 ### Action Inputs
 
-| Input argument  | description                                                         | default               |
-| --------------- | ------------------------------------------------------------------- | --------------------- |
-| project-path    | Path to the folder that contains a valid `devbox.json`              | repo's root directory |
-| enable-cache    | Cache the entire Nix store in github based on your `devbox.json`    | false                 |
-| devbox-version  | Specify devbox CLI version you want to pin to. Only supports >0.2.2 | latest                |
-| sha256-checksum | Specify an explicit checksum for the devbox binary                  |                       |
+| Input argument   | description                                                         | default               |
+| ---------------- | ------------------------------------------------------------------- | --------------------- |
+| project-path     | Path to the folder that contains a valid `devbox.json`              | repo's root directory |
+| enable-cache     | Cache the entire Nix store in github based on your `devbox.json`    | false                 |
+| enable-cli-cache | Cache the CLI binary                                                | true                  |
+| devbox-version   | Specify devbox CLI version you want to pin to. Only supports >0.2.2 | latest                |
+| sha256-checksum  | Specify an explicit checksum for the devbox binary                  |                       |
 
 ### Example Configuration
 
@@ -48,6 +49,7 @@ Here's an example job with all inputs:
   with:
     project-path: 'path-to-folder'
     enable-cache: true
+    enable-cli-cache: true
     devbox-version: 0.5.5
     sha256-sum: b6f7e24839de004ef2cad312f05865f77a73b1e0b1757e0f4d39a5911adabd50
 ```
