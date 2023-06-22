@@ -47,3 +47,44 @@ jobs:
         with:
           enable-cache: true
           project-path: 'testdata'
+
+  test-action-with-sha256-checksum:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          devbox-version: 0.5.5
+          refresh-cli: 'true'
+          project-path: 'testdata'
+          sha256-checksum: 'd5e623c032d38250346301040d51bcdca8e6db051c3688cc452e0dda5d95a070'
+
+  test-action-with-sha256-checksum-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        id: install-devbox
+        uses: ./
+        continue-on-error: true
+        with:
+          devbox-version: 0.5.5
+          refresh-cli: 'true'
+          sha256-checksum: 'bad-sha'
+          project-path: 'testdata'
+      - name: Fail on success
+        if: steps.install-devbox.outcome == 'success'
+        run: echo "The SHA check should have failed!" && exit 1
+
+  test-action-with-sha256-checksum-on-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install devbox
+        uses: ./
+        with:
+          devbox-version: 0.5.5
+          refresh-cli: 'true'
+          sha256-checksum: '3c2ce11638e3ffcd55881ec20143c38feeb24069ccdb5edf82b343c168aaca32'
+          project-path: 'testdata'

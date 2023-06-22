@@ -11,9 +11,14 @@ inputs:
   enable-cache:  # 'true' or 'false'
     description: 'Caching the entire Nix store in github based on your devbox.json'
     default: 'false'
+  refresh-cli: # 'true' or 'false'
+    description: 'Specify whether the CLI should be redownloaded'
+    default: 'false'
   devbox-version: # version of the devbox cli
     description: 'Specify devbox CLI version you want to pin to. Default to latest'
     default: ''
+  sha256-checksum: # the expected SHA256 checksum of the devbox binary.
+    description: 'Specify an explicit checksum for the devbox binary. For extra security on top of the existing checks in the devbox launch script'
 
 runs:
   using: "composite"
@@ -43,7 +48,7 @@ runs:
           echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
         else
           tmp_file=$(mktemp)
-          latest_url="https://releases.jetpack.io/devbox/latest/version"
+          latest_url="https://releases.jetpack.io/devbox/stable/version"
           curl --fail --silent --location --output "${tmp_file}" "${latest_url}"
           latest_version=$(cat "${tmp_file}")
           if [[ -n ${latest_version} ]]; then
@@ -56,6 +61,7 @@ runs:
         fi
 
     - name: Mount devbox cli cache
+      if: inputs.refresh-cli == 'false'
       id: cache-devbox-cli
       uses: actions/cache@v3
       with:
@@ -65,6 +71,8 @@ runs:
     - name: Install devbox cli
       if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        DEVBOX_SHA256: ${{ inputs.sha256-checksum }}
       run: |
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
@@ -74,7 +82,27 @@ runs:
           echo "ERROR: mismatch devbox version downloaded. Expected $DEVBOX_USE_VERSION, got $version."
           exit 1
         fi
-        sudo mv ${HOME}/.cache/devbox/bin/${version}_*/devbox /usr/local/bin/devbox
+        DEVBOX_BINARY="$(find "${HOME}/.cache/devbox/bin" -name devbox)"
+        if [ -n "$DEVBOX_SHA256" ]; then
+          if command -v "sha256sum" 1>/dev/null 2>&1; then
+            # Linux distributions will likely have this.
+            DEVBOX_CHECKSUM="$(sha256sum "$DEVBOX_BINARY" | cut -f1 -d' ')"
+          elif command -v "shasum" 1>/dev/null 2>&1; then
+            # MacOS comes with this.
+            DEVBOX_CHECKSUM="$(shasum -a 256 "$DEVBOX_BINARY" | cut -f1 -d' ')"
+          fi
+
+          if [ -z "$DEVBOX_CHECKSUM" ]; then
+            echo "ERROR: unable to get devbox checksum. Please ensure sha256sum or shasum is installed."
+            exit 2
+          fi
+
+          if [[ ! "$DEVBOX_CHECKSUM" = "$DEVBOX_SHA256" ]]; then
+            echo "ERROR: checksums do not match. Expected $DEVBOX_SHA256, got $DEVBOX_CHECKSUM."
+            exit 3
+          fi
+        fi
+        sudo mv "$DEVBOX_BINARY" /usr/local/bin/devbox
 
     - name: Install nix and devbox packages
       shell: bash
