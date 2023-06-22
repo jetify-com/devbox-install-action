@@ -11,9 +11,9 @@ inputs:
   enable-cache:  # 'true' or 'false'
     description: 'Caching the entire Nix store in github based on your devbox.json'
     default: 'false'
-  enable-cli-cache: # 'true' or 'false'
-    description: 'Caching the CLI binary'
-    default: 'true'
+  refresh-cli: # 'true' or 'false'
+    description: 'Specify whether the CLI should be redownloaded'
+    default: 'false'
   devbox-version: # version of the devbox cli
     description: 'Specify devbox CLI version you want to pin to. Default to latest'
     default: ''
@@ -61,7 +61,7 @@ runs:
         fi
 
     - name: Mount devbox cli cache
-      if: inputs.enable-cli-cache == 'true'
+      if: inputs.refresh-cli == 'false'
       id: cache-devbox-cli
       uses: actions/cache@v3
       with:
