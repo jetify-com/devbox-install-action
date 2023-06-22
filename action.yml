@@ -24,7 +24,7 @@ runs:
   using: "composite"
   steps:
     - name: Workaround for permission issue
-      if: inputs.enable-cache == 'true'
+      if: inputs.enable-cache == 'true' && runner.os != 'macOS'
       shell: bash
       run: sudo chmod u+s "$(command -v tar)"
 
@@ -37,6 +37,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
+          ~/.local/state/nix
         key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.json', inputs.project-path)) }}
 
     - name: Get devbox version
