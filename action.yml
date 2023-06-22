@@ -45,7 +45,7 @@ runs:
           echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
         else
           tmp_file=$(mktemp)
-          latest_url="https://releases.jetpack.io/devbox/latest/version"
+          latest_url="https://releases.jetpack.io/devbox/stable/version"
           curl --fail --silent --location --output "${tmp_file}" "${latest_url}"
           latest_version=$(cat "${tmp_file}")
           if [[ -n ${latest_version} ]]; then
@@ -68,7 +68,7 @@ runs:
       if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
       shell: bash
       env:
-        DEVBOX_SHA256: ${{ inputs.sha256-checksum}}
+        DEVBOX_SHA256: ${{ inputs.sha256-checksum }}
       run: |
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
@@ -80,6 +80,7 @@ runs:
         fi
         DEVBOX_BINARY="$(find "${HOME}/.cache/devbox/bin" -name devbox)"
         if [ -n "$DEVBOX_SHA256" ]; then
+          echo "Found sha: $DEVBOX_SHA256" # Delete this.
           if command -v "sha256sum" 1>/dev/null 2>&1; then
             # Linux distributions will likely have this.
             DEVBOX_CHECKSUM="$(sha256sum "$DEVBOX_BINARY" | cut -f1 -d' ')"
