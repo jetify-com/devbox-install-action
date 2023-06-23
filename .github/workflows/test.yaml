@@ -8,6 +8,8 @@ concurrency:
 on:
   pull_request:
   push:
+    branches:
+      - main
     paths-ignore:
       - '**.md'
 
@@ -35,7 +37,7 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.4.4
+          devbox-version: 0.5.5
           project-path: 'testdata'
 
   test-action-with-cache:
@@ -56,7 +58,7 @@ jobs:
         uses: ./
         with:
           devbox-version: 0.5.5
-          refresh-cli: 'true'
+          refresh-cli: true
           project-path: 'testdata'
           sha256-checksum: 'd5e623c032d38250346301040d51bcdca8e6db051c3688cc452e0dda5d95a070'
 
@@ -70,7 +72,7 @@ jobs:
         continue-on-error: true
         with:
           devbox-version: 0.5.5
-          refresh-cli: 'true'
+          refresh-cli: true
           sha256-checksum: 'bad-sha'
           project-path: 'testdata'
       - name: Fail on success
@@ -85,6 +87,7 @@ jobs:
         uses: ./
         with:
           devbox-version: 0.5.5
-          refresh-cli: 'true'
+          enable-cache: true
+          refresh-cli: true
           sha256-checksum: '3c2ce11638e3ffcd55881ec20143c38feeb24069ccdb5edf82b343c168aaca32'
           project-path: 'testdata'
