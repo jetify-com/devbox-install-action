@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install devbox
-        uses: jetpack-io/devbox-install-action@v0.3.0
+        uses: jetpack-io/devbox-install-action@v0.4.0
 
       - name: Run arbitrary commands
         run: devbox shell -- echo "done!"
