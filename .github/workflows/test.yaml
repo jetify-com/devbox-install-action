@@ -29,6 +29,7 @@ jobs:
         uses: ./
         with:
           project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-version:
     runs-on: ubuntu-latest
@@ -39,6 +40,7 @@ jobs:
         with:
           devbox-version: 0.5.5
           project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-cache:
     runs-on: ubuntu-latest
@@ -49,6 +51,7 @@ jobs:
         with:
           enable-cache: true
           project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum:
     runs-on: ubuntu-latest
@@ -61,6 +64,7 @@ jobs:
           refresh-cli: true
           project-path: 'testdata'
           sha256-checksum: 'd5e623c032d38250346301040d51bcdca8e6db051c3688cc452e0dda5d95a070'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum-failure:
     runs-on: ubuntu-latest
@@ -75,6 +79,7 @@ jobs:
           refresh-cli: true
           sha256-checksum: 'bad-sha'
           project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
       - name: Fail on success
         if: steps.install-devbox.outcome == 'success'
         run: echo "The SHA check should have failed!" && exit 1
@@ -91,3 +96,4 @@ jobs:
           refresh-cli: true
           sha256-checksum: '3c2ce11638e3ffcd55881ec20143c38feeb24069ccdb5edf82b343c168aaca32'
           project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
