@@ -19,9 +19,9 @@ inputs:
     default: ''
   sha256-checksum: # the expected SHA256 checksum of the devbox binary.
     description: 'Specify an explicit checksum for the devbox binary. For extra security on top of the existing checks in the devbox launch script'
-  configure-nix-access-token: # 'true' or 'false'
-    description: 'Specify whether the nix access-tokens should be configured with the GitHub token used in the workflow'
-    default: 'true'
+  disable-nix-access-token: # 'true' or 'false'
+    description: 'Disable configuration of nix access-tokens with the GitHub token used in the workflow'
+    default: 'false'
 
 runs:
   using: "composite"
@@ -109,11 +109,11 @@ runs:
         sudo mv "$DEVBOX_BINARY" /usr/local/bin/devbox
 
     - name: Configure nix access-tokens
-      if: inputs.configure-nix-access-token == 'true'
+      if: inputs.disable-nix-access-token == 'false'
       shell: bash
       run: |
         mkdir -p ~/.config/nix
-        echo "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}" >> ~/.config/nix/nix.conf
+        echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
 
     - name: Install nix and devbox packages
       shell: bash
