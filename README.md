@@ -52,5 +52,6 @@ Here's an example job with all inputs:
     enable-cache: 'true'
     refresh-cli: 'false'
     devbox-version: 0.5.5
+    disable-nix-access-token: 'false'
     sha256-sum: b6f7e24839de004ef2cad312f05865f77a73b1e0b1757e0f4d39a5911adabd50
 ```
