@@ -41,7 +41,7 @@ runs:
           /nix/store
           /nix/var/nix
           ~/.local/state/nix
-        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.json', inputs.project-path)) }}
+        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Get devbox version
       shell: bash
