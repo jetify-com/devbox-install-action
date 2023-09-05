@@ -42,11 +42,3 @@ jobs:
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
-  test-action-with-version-5:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install prod action
-        uses: jetpack-io/devbox-install-action@v0.5.0
-        with:
-          project-path: 'testdata'
