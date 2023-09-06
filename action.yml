@@ -81,8 +81,6 @@ runs:
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
 
-        devbox setup nix # temporary until 0.5.13 is released
-        
         version=$(devbox version)
         if [[ ! "$version" = "$DEVBOX_USE_VERSION" ]]; then
           echo "ERROR: mismatch devbox version downloaded. Expected $DEVBOX_USE_VERSION, got $version."
