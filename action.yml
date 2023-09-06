@@ -29,7 +29,9 @@ runs:
     - name: Workaround for permission issue
       if: inputs.enable-cache == 'true' && runner.os != 'macOS'
       shell: bash
-      run: sudo chmod u+s "$(command -v tar)"
+      run: |
+        ls -al /tmp
+        sudo chmod u+s "$(command -v tar)"
 
     - name: Mount nix store cache
       if: inputs.enable-cache == 'true'
@@ -124,3 +126,4 @@ runs:
         NIX_INSTALLER_NO_CHANNEL_ADD=1
         NIX_BUILD_SHELL=/bin/bash
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
+        ls -al /tmp
