@@ -117,9 +117,18 @@ runs:
         mkdir -p ~/.config/nix
         echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
 
+    - name: Install nix
+      uses: DeterminateSystems/nix-installer-action@v4
+      with:
+        logger: pretty
+        extra-conf: experimental-features = ca-derivations fetch-closure
+
     - name: Install nix and devbox packages
       shell: bash
       run: |
+        echo "::group::Nix version"
+        nix --version
+        echo "::endgroup::"
         NIX_INSTALLER_NO_CHANNEL_ADD=1
         NIX_BUILD_SHELL=/bin/bash
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
