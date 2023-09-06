@@ -127,3 +127,4 @@ runs:
         NIX_BUILD_SHELL=/bin/bash
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
         ls -al /tmp
+        ls -al /tmp/nix-binary-tarball-unpack.mkTAOGIcsQ
