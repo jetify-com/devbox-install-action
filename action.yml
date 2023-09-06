@@ -81,7 +81,8 @@ runs:
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
 
-        devbox setup nix # temporary until 0.5.13 is released
+        # comment out to repro permissions problem of issue #13
+        # devbox setup nix # temporary until 0.5.13 is released
         
         version=$(devbox version)
         if [[ ! "$version" = "$DEVBOX_USE_VERSION" ]]; then
