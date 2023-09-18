@@ -27,9 +27,14 @@ runs:
   using: "composite"
   steps:
     - name: Workaround for permission issue
-      if: inputs.enable-cache == 'true' && runner.os != 'macOS'
+      if: inputs.enable-cache == 'true'
       shell: bash
-      run: sudo chmod u+s "$(command -v tar)"
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo chmod u+s "$(command -v gtar)"
+        else
+          sudo chmod u+s "$(command -v tar)"
+        fi
 
     - name: Mount nix store cache
       if: inputs.enable-cache == 'true'
@@ -39,7 +44,6 @@ runs:
           ~/.nix-defexpr
           ~/.nix-profile
           /nix/store
-          /nix/var/nix
           ~/.local/state/nix
         key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
@@ -81,8 +85,6 @@ runs:
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
         curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
 
-        devbox setup nix # temporary until 0.5.13 is released
-        
         version=$(devbox version)
         if [[ ! "$version" = "$DEVBOX_USE_VERSION" ]]; then
           echo "ERROR: mismatch devbox version downloaded. Expected $DEVBOX_USE_VERSION, got $version."
@@ -120,6 +122,7 @@ runs:
     - name: Install nix and devbox packages
       shell: bash
       run: |
-        NIX_INSTALLER_NO_CHANNEL_ADD=1
-        NIX_BUILD_SHELL=/bin/bash
+        export NIX_USER_COUNT=1
+        export NIX_INSTALLER_NO_CHANNEL_ADD=1
+        export NIX_BUILD_SHELL=/bin/bash
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"

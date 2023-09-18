@@ -32,7 +32,7 @@ jobs:
 ### Action Inputs
 
 | Input argument           | description                                                                           | default               |
-| ----------------         | ------------------------------------------------------------------------------------- | --------------------- |
+| ------------------------ | ------------------------------------------------------------------------------------- | --------------------- |
 | project-path             | Path to the folder that contains a valid `devbox.json`                                | repo's root directory |
 | enable-cache             | Cache the entire Nix store in github based on your `devbox.json`                      | false                 |
 | refresh-cli              | Specify whether the CLI should be redownloaded                                        | false                 |
@@ -51,7 +51,7 @@ Here's an example job with all inputs:
     project-path: 'path-to-folder'
     enable-cache: 'true'
     refresh-cli: 'false'
-    devbox-version: 0.5.11
+    devbox-version: 0.5.13
     disable-nix-access-token: 'false'
-    sha256-sum: b6f7e24839de004ef2cad312f05865f77a73b1e0b1757e0f4d39a5911adabd50
+    sha256-sum: f5907e5782f6e1f5a7ca32c8ae2a0a81618549314bab237174a46fb216f43809
 ```
