@@ -26,27 +26,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Workaround for permission issue
-      if: inputs.enable-cache == 'true'
-      shell: bash
-      run: |
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo chmod u+s "$(command -v gtar)"
-        else
-          sudo chmod u+s "$(command -v tar)"
-        fi
-
-    - name: Mount nix store cache
-      if: inputs.enable-cache == 'true'
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.nix-defexpr
-          ~/.nix-profile
-          /nix/store
-          ~/.local/state/nix
-        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
-
     - name: Get devbox version
       shell: bash
       env:
@@ -119,10 +98,39 @@ runs:
         mkdir -p ~/.config/nix
         echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
 
-    - name: Install nix and devbox packages
+    - name: Devbox setup Nix
       shell: bash
       run: |
         export NIX_USER_COUNT=1
         export NIX_INSTALLER_NO_CHANNEL_ADD=1
         export NIX_BUILD_SHELL=/bin/bash
+        devbox setup nix
+
+    - name: Workaround nix store cache permission issue
+      if: inputs.enable-cache == 'true'
+      shell: bash
+      run: |
+        whoami
+        ls -al /nix/store
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo /usr/sbin/dseditgroup -o edit -t user \
+          -a "$(whoami)" "nixbld"
+        else
+          sudo chmod u+s "$(command -v tar)"
+        fi
+
+    - name: Mount nix store cache
+      if: inputs.enable-cache == 'true'
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.nix-defexpr
+          ~/.nix-profile
+          /nix/store
+          ~/.local/state/nix
+        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+
+    - name: Install devbox packages
+      shell: bash
+      run: |
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
