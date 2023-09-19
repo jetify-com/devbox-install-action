@@ -91,6 +91,20 @@ runs:
         fi
         sudo mv "$DEVBOX_BINARY" /usr/local/bin/devbox
 
+    - name: Workaround nix store cache permission issue
+      if: inputs.enable-cache == 'true'
+      shell: bash
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo mv /usr/local/bin/gtar /usr/local/bin/gtar.orig
+          echo "#!/bin/sh" >> /usr/local/bin/gtar
+          echo "set -euo pipefail" >> /usr/local/bin/gtar
+          echo 'exec sudo /usr/local/bin/gtar.orig "$@"' >> /usr/local/bin/gtar
+          sudo chmod +x /usr/local/bin/gtar
+        else
+          sudo chmod u+s "$(command -v tar)"
+        fi
+
     - name: Configure nix access-tokens
       if: inputs.disable-nix-access-token == 'false'
       shell: bash
@@ -98,36 +112,22 @@ runs:
         mkdir -p ~/.config/nix
         echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
 
-    - name: Devbox setup Nix
-      shell: bash
-      run: |
-        export NIX_USER_COUNT=1
-        export NIX_INSTALLER_NO_CHANNEL_ADD=1
-        export NIX_BUILD_SHELL=/bin/bash
-        devbox setup nix
-
-    - name: Workaround nix store cache permission issue
-      if: inputs.enable-cache == 'true'
-      shell: bash
-      run: |
-        whoami
-        ls -al /nix/store
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo /usr/sbin/dseditgroup -o edit -t user \
-          -a "$(whoami)" "nixbld"
-        else
-          sudo chmod u+s "$(command -v tar)"
-        fi
+    - name: Install nix
+      uses: DeterminateSystems/nix-installer-action@v4
+      with:
+        logger: pretty
+        extra-conf: experimental-features = ca-derivations fetch-closure
 
     - name: Mount nix store cache
       if: inputs.enable-cache == 'true'
       uses: actions/cache@v3
       with:
         path: |
+          ~/.local/state/nix
           ~/.nix-defexpr
           ~/.nix-profile
           /nix/store
-          ~/.local/state/nix
+          /nix/var/nix
         key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Install devbox packages
