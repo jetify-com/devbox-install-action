@@ -52,6 +52,11 @@ jobs:
           enable-cache: true
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+      - name: Check cache directory ownership
+        shell: bash
+        run: |
+          ls -al ~/.cache
+
 
   test-action-with-sha256-checksum:
     runs-on: ubuntu-latest
@@ -97,3 +102,7 @@ jobs:
           sha256-checksum: 'f5907e5782f6e1f5a7ca32c8ae2a0a81618549314bab237174a46fb216f43809'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+      - name: Check cache directory ownership
+        shell: bash
+        run: |
+          ls -al ~/.cache

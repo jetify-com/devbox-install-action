@@ -100,8 +100,11 @@ runs:
           echo "#!/bin/sh" >> /usr/local/bin/gtar
           echo 'exec sudo /usr/local/bin/gtar.orig "$@"' >> /usr/local/bin/gtar
           sudo chmod +x /usr/local/bin/gtar
-        else
-          sudo chmod u+s "$(command -v tar)"
+        elif [ "$RUNNER_OS" == "Linux" ]; then
+          mkdir -p ~/.local/bin
+          echo "#!/bin/sh" >> ~/.local/bin/tar
+          echo 'exec sudo /usr/bin/tar "$@"' >> ~/.local/bin/tar
+          sudo chmod +x ~/.local/bin/tar
         fi
 
     - name: Configure nix access-tokens
@@ -122,7 +125,8 @@ runs:
       uses: actions/cache@v3
       with:
         path: |
-          ~/.cache
+          ~/.cache/devbox
+          ~/.cache/nix
           ~/.local/state/nix
           ~/.nix-defexpr
           ~/.nix-profile
