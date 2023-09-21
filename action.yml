@@ -122,8 +122,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: |
-          ~/.cache/devbox
-          ~/.cache/nix
+          ~/.cache
           ~/.local/state/nix
           ~/.nix-defexpr
           ~/.nix-profile
