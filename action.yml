@@ -101,6 +101,7 @@ runs:
           echo 'exec sudo /usr/local/bin/gtar.orig "$@"' >> /usr/local/bin/gtar
           sudo chmod +x /usr/local/bin/gtar
         elif [ "$RUNNER_OS" == "Linux" ]; then
+          mkdir -p ~/.cache
           mkdir -p ~/.local/bin
           echo "#!/bin/sh" >> ~/.local/bin/tar
           echo 'exec sudo /usr/bin/tar "$@"' >> ~/.local/bin/tar
@@ -138,3 +139,13 @@ runs:
       shell: bash
       run: |
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
+
+    - name: Restore tar command
+      if: inputs.enable-cache == 'true'
+      shell: bash
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo mv /usr/local/bin/gtar.orig /usr/local/bin/gtar
+        elif [ "$RUNNER_OS" == "Linux" ]; then
+          rm ~/.local/bin/tar
+        fi
