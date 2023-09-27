@@ -39,6 +39,7 @@ jobs:
 | devbox-version           | Specify devbox CLI version you want to pin to. Only supports >0.2.2                   | latest                |
 | sha256-checksum          | Specify an explicit checksum for the devbox binary                                    |                       |
 | disable-nix-access-token | Disable configuration of nix access-tokens with the GitHub token used in the workflow | false                 |
+| skip-nix-installation    | Skip the installation of nix                                                          | false                 |
 
 ### Example Configuration
 

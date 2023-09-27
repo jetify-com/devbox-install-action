@@ -5,10 +5,10 @@ branding:
   color: 'purple'
 
 inputs:
-  project-path:  # path to folder
+  project-path: # path to folder
     description: 'Project path to devbox.json. Default to the root directory of the repository.'
     default: '.'
-  enable-cache:  # 'true' or 'false'
+  enable-cache: # 'true' or 'false'
     description: 'Caching the entire Nix store in github based on your devbox.json'
     default: 'false'
   refresh-cli: # 'true' or 'false'
@@ -21,6 +21,9 @@ inputs:
     description: 'Specify an explicit checksum for the devbox binary. For extra security on top of the existing checks in the devbox launch script'
   disable-nix-access-token: # 'true' or 'false'
     description: 'Disable configuration of nix access-tokens with the GitHub token used in the workflow'
+    default: 'false'
+  skip-nix-installation: # 'true' or 'false'
+    description: 'Skip the installation of nix'
     default: 'false'
 
 runs:
@@ -116,6 +119,7 @@ runs:
         echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
 
     - name: Install nix
+      if: inputs.skip-nix-installation == 'false'
       uses: DeterminateSystems/nix-installer-action@v4
       with:
         logger: pretty
