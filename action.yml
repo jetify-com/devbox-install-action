@@ -53,10 +53,10 @@ runs:
     - name: Mount devbox cli cache
       if: inputs.refresh-cli == 'false'
       id: cache-devbox-cli
-      uses: actions/cache@v3
+      uses: actions/cache/restore@v3
       with:
         path: /usr/local/bin/devbox
-        key: ${{ runner.os }}-devbox-${{ env.latest_version }}
+        key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
 
     - name: Install devbox cli
       if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
@@ -94,6 +94,13 @@ runs:
         fi
         sudo mv "$DEVBOX_BINARY" /usr/local/bin/devbox
 
+    - name: Save devbox cli cache
+      if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: /usr/local/bin/devbox
+        key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
+
     - name: Workaround nix store cache permission issue
       if: inputs.enable-cache == 'true'
       shell: bash
@@ -126,8 +133,9 @@ runs:
         extra-conf: experimental-features = ca-derivations fetch-closure
 
     - name: Mount nix store cache
+      id: cache-devbox-nix-store
       if: inputs.enable-cache == 'true'
-      uses: actions/cache@v3
+      uses: actions/cache/restore@v3
       with:
         path: |
           ~/.cache/devbox
@@ -137,12 +145,26 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-devbox-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Install devbox packages
       shell: bash
       run: |
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
+
+    - name: Save nix store cache
+      if: inputs.enable-cache == 'true' && steps.cache-devbox-nix-store.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ~/.cache/devbox
+          ~/.cache/nix
+          ~/.local/state/nix
+          ~/.nix-defexpr
+          ~/.nix-profile
+          /nix/store
+          /nix/var/nix
+        key: ${{ runner.os }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Restore tar command
       if: inputs.enable-cache == 'true'
