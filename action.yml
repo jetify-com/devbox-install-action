@@ -53,7 +53,7 @@ runs:
     - name: Mount devbox cli cache
       if: inputs.refresh-cli == 'false'
       id: cache-devbox-cli
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         path: /usr/local/bin/devbox
         key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
@@ -96,7 +96,7 @@ runs:
 
     - name: Save devbox cli cache
       if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         path: /usr/local/bin/devbox
         key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
@@ -135,7 +135,7 @@ runs:
     - name: Mount nix store cache
       id: cache-devbox-nix-store
       if: inputs.enable-cache == 'true'
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         path: |
           ~/.cache/devbox
@@ -154,7 +154,7 @@ runs:
 
     - name: Save nix store cache
       if: inputs.enable-cache == 'true' && steps.cache-devbox-nix-store.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         path: |
           ~/.cache/devbox
