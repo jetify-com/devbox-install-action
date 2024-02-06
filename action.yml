@@ -127,7 +127,7 @@ runs:
 
     - name: Install nix
       if: inputs.skip-nix-installation == 'false'
-      uses: DeterminateSystems/nix-installer-action@65d7c888b2778e8cf30a07a88422ccb23499bfb8  # v4
+      uses: DeterminateSystems/nix-installer-action@cd46bde16ab981b0a7b2dce0574509104543276e  # v9
       with:
         logger: pretty
         extra-conf: experimental-features = ca-derivations fetch-closure
