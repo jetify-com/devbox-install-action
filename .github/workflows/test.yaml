@@ -24,7 +24,7 @@ jobs:
   test-action:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
@@ -34,7 +34,7 @@ jobs:
   test-action-with-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
@@ -45,7 +45,7 @@ jobs:
   test-action-with-cache:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
@@ -56,7 +56,7 @@ jobs:
   test-action-with-sha256-checksum:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
@@ -69,7 +69,7 @@ jobs:
   test-action-with-sha256-checksum-failure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         id: install-devbox
         uses: ./
@@ -87,7 +87,7 @@ jobs:
   test-action-with-sha256-checksum-on-mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
