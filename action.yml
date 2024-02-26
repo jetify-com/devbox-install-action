@@ -56,7 +56,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: /usr/local/bin/devbox
-        key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Install devbox cli
       if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
@@ -99,7 +99,7 @@ runs:
       uses: actions/cache/save@v4
       with:
         path: /usr/local/bin/devbox
-        key: ${{ runner.os }}-devbox-cli-${{ env.latest_version }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Workaround nix store cache permission issue
       if: inputs.enable-cache == 'true'
@@ -145,7 +145,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Install devbox packages
       shell: bash
@@ -164,7 +164,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Restore tar command
       if: inputs.enable-cache == 'true'
