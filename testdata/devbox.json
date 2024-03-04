@@ -3,6 +3,6 @@
     "go@latest"
   ],
   "shell": {
-    "init_hook": null
+    "init_hook": []
   }
 }

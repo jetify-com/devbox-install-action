@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install devbox
-        uses: jetpack-io/devbox-install-action@v0.7.0
+        uses: jetpack-io/devbox-install-action@v0.8.0
 
       - name: Run arbitrary commands
         run: devbox run -- echo "done!"
@@ -52,7 +52,7 @@ Here's an example job with all inputs:
     project-path: 'path-to-folder'
     enable-cache: 'true'
     refresh-cli: 'false'
-    devbox-version: 0.5.13
+    devbox-version: 0.9.1
     disable-nix-access-token: 'false'
     sha256-sum: f5907e5782f6e1f5a7ca32c8ae2a0a81618549314bab237174a46fb216f43809
 ```
