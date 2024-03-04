@@ -38,7 +38,7 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.5.13
+          devbox-version: 0.9.1
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
@@ -60,10 +60,10 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.5.13
+          devbox-version: 0.9.1
           refresh-cli: true
           project-path: 'testdata'
-          sha256-checksum: '481cc5d270a22843d7f7c34eac6cea4bbe9f2cdfbc72f0217ea3823ebabecc43'
+          sha256-checksum: 'f58202279237b9e0e7d69ef9334c7ca0628db31e5575f105dad6f41a171ebb6a'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum-failure:
@@ -75,7 +75,7 @@ jobs:
         uses: ./
         continue-on-error: true
         with:
-          devbox-version: 0.5.13
+          devbox-version: 0.9.1
           refresh-cli: true
           sha256-checksum: 'bad-sha'
           project-path: 'testdata'
@@ -91,9 +91,9 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.5.13
+          devbox-version: 0.9.1
           enable-cache: true
           refresh-cli: true
-          sha256-checksum: 'f5907e5782f6e1f5a7ca32c8ae2a0a81618549314bab237174a46fb216f43809'
+          sha256-checksum: '3cf9bdffbdcc73f49f99f90df7092379589ef2e90f994cfc0163d2ff07a1f189'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
