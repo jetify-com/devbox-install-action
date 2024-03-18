@@ -1,8 +1,13 @@
 {
   "packages": [
-    "go@latest"
+    "nodejs@latest"
   ],
+  "env": {
+    "DEVBOX_COREPACK_ENABLED": "true"
+  },
   "shell": {
-    "init_hook": []
+    "scripts": {
+      "version": "pnpm version"
+    }
   }
 }

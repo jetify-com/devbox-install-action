@@ -30,6 +30,11 @@ jobs:
         with:
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+      - name: test version
+        working-directory: 'testdata'
+        run: |
+          devbox run version
+          devbox run pnpm version
 
   test-action-with-version:
     runs-on: ubuntu-latest
