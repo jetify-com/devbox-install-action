@@ -38,7 +38,7 @@ runs:
           echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
         else
           tmp_file=$(mktemp)
-          latest_url="https://releases.jetpack.io/devbox/stable/version"
+          latest_url="https://releases.jetify.com/devbox/stable/version"
           curl --fail --silent --location --output "${tmp_file}" "${latest_url}"
           latest_version=$(cat "${tmp_file}")
           if [[ -n ${latest_version} ]]; then
@@ -65,7 +65,7 @@ runs:
         DEVBOX_SHA256: ${{ inputs.sha256-checksum }}
       run: |
         export DEVBOX_USE_VERSION="${{ env.latest_version }}"
-        curl -fsSL https://get.jetpack.io/devbox | FORCE=1 bash
+        curl -fsSL https://get.jetify.com/devbox | FORCE=1 bash
 
         version=$(devbox version)
         if [[ ! "$version" = "$DEVBOX_USE_VERSION" ]]; then

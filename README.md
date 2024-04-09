@@ -2,7 +2,7 @@
 
 This action downloads the devbox CLI and installs the Nix packages defined in your `devbox.json`.
 
-[![version](https://img.shields.io/github/v/release/jetpack-io/devbox-install-action?color=green&label=version&sort=semver)](https://github.com/jetpack-io/devbox-install-action/releases) [![tests](https://github.com/jetpack-io/devbox-install-action/actions/workflows/test.yaml/badge.svg)](https://github.com/jetpack-io/devbox-install-action/actions/workflows/test.yaml?branch=main)
+[![version](https://img.shields.io/github/v/release/jetify-com/devbox-install-action?color=green&label=version&sort=semver)](https://github.com/jetify-com/devbox-install-action/releases) [![tests](https://github.com/jetify-com/devbox-install-action/actions/workflows/test.yaml/badge.svg)](https://github.com/jetify-com/devbox-install-action/actions/workflows/test.yaml?branch=main)
 
 ## Example Workflow
 
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install devbox
-        uses: jetpack-io/devbox-install-action@v0.8.0
+        uses: jetify-com/devbox-install-action@v0.8.0
 
       - name: Run arbitrary commands
         run: devbox run -- echo "done!"
@@ -47,7 +47,7 @@ Here's an example job with all inputs:
 
 ```
 - name: Install devbox
-  uses: jetpack-io/devbox-install-action@v0.7.0
+  uses: jetify-com/devbox-install-action@v0.7.0
   with:
     project-path: 'path-to-folder'
     enable-cache: 'true'
