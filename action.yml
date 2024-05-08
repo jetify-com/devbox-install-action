@@ -106,6 +106,9 @@ runs:
       shell: bash
       run: |
         if [ "$RUNNER_OS" == "macOS" ]; then
+          which tar
+          which gtar
+          which bsdtar
           sudo mv /usr/local/bin/gtar /usr/local/bin/gtar.orig
           echo "#!/bin/sh" >> /usr/local/bin/gtar
           echo 'exec sudo /usr/local/bin/gtar.orig "$@"' >> /usr/local/bin/gtar
