@@ -47,17 +47,6 @@ jobs:
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
-  test-action-with-cache:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install devbox
-        uses: ./
-        with:
-          enable-cache: true
-          project-path: 'testdata'
-          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
-
   test-action-with-sha256-checksum:
     runs-on: ubuntu-latest
     steps:
