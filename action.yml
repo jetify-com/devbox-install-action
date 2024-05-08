@@ -107,7 +107,7 @@ runs:
       run: |
         if [ "$RUNNER_OS" == "macOS" ]; then
           gtar_path=$(which gtar)
-          # sudo mv $gtar_path $gtar_path.orig
+          sudo mv $gtar_path $gtar_path.orig
           echo "#!/bin/sh" >> $gtar_path
           echo 'exec sudo $gtar_path.orig "$@"' >> $gtar_path
           sudo chmod +x $gtar_path
