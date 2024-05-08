@@ -109,7 +109,7 @@ runs:
           gtar_path=$(which gtar)
           sudo mv $gtar_path $gtar_path.orig
           echo "#!/bin/sh" >> $gtar_path
-          echo 'exec sudo $gtar_path.orig "$@"' >> $gtar_path
+          echo "exec sudo $gtar_path.orig \"$@\"" >> $gtar_path
           sudo chmod +x $gtar_path
         elif [ "$RUNNER_OS" == "Linux" ]; then
           mkdir -p ~/.cache
