@@ -97,6 +97,6 @@ jobs:
           devbox-version: 0.9.1
           enable-cache: true
           refresh-cli: true
-          sha256-checksum: '3cf9bdffbdcc73f49f99f90df7092379589ef2e90f994cfc0163d2ff07a1f189'
+          sha256-checksum: 'e7793acf6dadecc6a04eb64d6352665698c75f6c9f59fbe3efee3b04dbec294d'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
