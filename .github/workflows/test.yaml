@@ -85,7 +85,10 @@ jobs:
         run: echo "The SHA check should have failed!" && exit 1
 
   test-action-with-sha256-checksum-on-mac:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [macos-12, macos-13, macos-14, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install devbox
