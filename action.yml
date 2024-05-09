@@ -106,10 +106,11 @@ runs:
       shell: bash
       run: |
         if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo mv /usr/local/bin/gtar /usr/local/bin/gtar.orig
-          echo "#!/bin/sh" >> /usr/local/bin/gtar
-          echo 'exec sudo /usr/local/bin/gtar.orig "$@"' >> /usr/local/bin/gtar
-          sudo chmod +x /usr/local/bin/gtar
+          gtar_path=$(which gtar)
+          sudo mv $gtar_path $gtar_path.orig
+          echo "#!/bin/sh" >> $gtar_path
+          echo "exec sudo $gtar_path.orig \"\$@\"" >> $gtar_path
+          sudo chmod +x $gtar_path
         elif [ "$RUNNER_OS" == "Linux" ]; then
           mkdir -p ~/.cache
           mkdir -p ~/.local/bin
@@ -171,7 +172,8 @@ runs:
       shell: bash
       run: |
         if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo mv /usr/local/bin/gtar.orig /usr/local/bin/gtar
+          gtar_path=$(which gtar)
+          sudo mv $gtar_path.orig $gtar_path
         elif [ "$RUNNER_OS" == "Linux" ]; then
           rm ~/.local/bin/tar
         fi

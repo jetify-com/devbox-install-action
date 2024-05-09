@@ -22,13 +22,18 @@ permissions:
 
 jobs:
   test-action:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [macos-12, macos-13, macos-14, macos-latest, ubuntu-latest]
+        use-cache: [true, false]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
           project-path: 'testdata'
+          enable-cache: ${{ matrix.use-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-version:
@@ -39,17 +44,6 @@ jobs:
         uses: ./
         with:
           devbox-version: 0.9.1
-          project-path: 'testdata'
-          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
-
-  test-action-with-cache:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install devbox
-        uses: ./
-        with:
-          enable-cache: true
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
@@ -92,8 +86,7 @@ jobs:
         uses: ./
         with:
           devbox-version: 0.9.1
-          enable-cache: true
           refresh-cli: true
-          sha256-checksum: '3cf9bdffbdcc73f49f99f90df7092379589ef2e90f994cfc0163d2ff07a1f189'
+          sha256-checksum: 'e7793acf6dadecc6a04eb64d6352665698c75f6c9f59fbe3efee3b04dbec294d'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
