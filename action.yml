@@ -92,13 +92,15 @@ runs:
             exit 3
           fi
         fi
-        sudo mv "$DEVBOX_BINARY" /usr/local/bin/devbox
+        mkdir -p ~/.local/bin
+        mv "$DEVBOX_BINARY" ~/.local/bin/devbox
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Save devbox cli cache
       if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: /usr/local/bin/devbox
+        path: ~/.local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Workaround nix store cache permission issue
