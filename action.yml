@@ -55,7 +55,7 @@ runs:
       id: cache-devbox-cli
       uses: actions/cache/restore@v4
       with:
-        path: /usr/local/bin/devbox
+        path: ~/.local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Install devbox cli
