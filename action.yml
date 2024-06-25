@@ -25,11 +25,59 @@ inputs:
   skip-nix-installation: # 'true' or 'false'
     description: 'Skip the installation of nix'
     default: 'false'
+  source-ref:
+    description: 'Build and install Devbox from a source git ref (conflicts with devbox-version).'
 
 runs:
   using: "composite"
   steps:
+    - name: Setup Devbox build environment
+      if: inputs.source-ref != ''
+      id: build-vars
+      shell: bash
+      run: |
+        if command -v go; then
+          echo "need-go=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "need-go=true" >> "$GITHUB_OUTPUT"
+        fi
+
+        build_dir='${{ github.workspace }}/${{ github.action }}'
+        echo "build-dir=$build_dir" >> "$GITHUB_OUTPUT"
+
+        bin_dir="$build_dir/bin"
+        echo "bin-dir=$bin_dir" >> "$GITHUB_OUTPUT"
+        echo "$bin_dir" >> $GITHUB_PATH
+
+    - name: Checkout jetify-com/devbox@${{ inputs.source-ref }}
+      if: inputs.source-ref != ''
+      uses: actions/checkout@v4
+      with:
+        repository: jetify-com/devbox
+        ref: ${{ inputs.source-ref }}
+        path: ${{ steps.build-vars.outputs.build-dir }}
+
+    - name: Install Go
+      if: inputs.source-ref != '' && steps.build-vars.outputs.need-go == 'true'
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: ${{ steps.build-vars.outputs.build-dir }}/go.mod
+        cache-dependency-path: ${{ steps.build-vars.outputs.build-dir }}/go.sum
+
+    - name: Build Devbox
+      if: inputs.source-ref != ''
+      shell: bash
+      env:
+        # If the calling workflow checks out a repo with a go.work in the parent
+        # directory, Go will try to use it and fail.
+        GOWORK: off
+      working-directory: ${{ steps.build-vars.outputs.build-dir }}
+      run: |
+        mkdir -p '${{ steps.build-vars.outputs.bin-dir }}'
+        go build -ldflags "-s -w" -trimpath -o '${{ steps.build-vars.outputs.bin-dir }}' ./cmd/devbox
+
     - name: Get devbox version
+      if: inputs.source-ref == ''
       shell: bash
       env:
         DEVBOX_USE_VERSION: ${{ inputs.devbox-version }}
@@ -51,7 +99,7 @@ runs:
         fi
 
     - name: Mount devbox cli cache
-      if: inputs.refresh-cli == 'false'
+      if: inputs.refresh-cli == 'false' && inputs.source-ref == ''
       id: cache-devbox-cli
       uses: actions/cache/restore@v4
       with:
@@ -59,7 +107,7 @@ runs:
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Install devbox cli
-      if: steps.cache-devbox-cli.outputs.cache-hit != 'true'
+      if: steps.cache-devbox-cli.outputs.cache-hit != 'true'&& inputs.source-ref == ''
       shell: bash
       env:
         DEVBOX_SHA256: ${{ inputs.sha256-checksum }}
@@ -97,7 +145,7 @@ runs:
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Save devbox cli cache
-      if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
+      if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true' && inputs.source-ref == ''
       uses: actions/cache/save@v4
       with:
         path: ~/.local/bin/devbox
