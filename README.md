@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install devbox
-        uses: jetify-com/devbox-install-action@v0.9.0
+        uses: jetify-com/devbox-install-action@v0.11.0
 
       - name: Run arbitrary commands
         run: devbox run -- echo "done!"
@@ -47,12 +47,12 @@ Here's an example job with all inputs:
 
 ```
 - name: Install devbox
-  uses: jetify-com/devbox-install-action@v0.9.0
+  uses: jetify-com/devbox-install-action@v0.11.0
   with:
     project-path: 'path-to-folder'
     enable-cache: 'true'
     refresh-cli: 'false'
-    devbox-version: 0.10.4
+    devbox-version: 0.13.4
     disable-nix-access-token: 'false'
-    sha256-checksum: f5907e5782f6e1f5a7ca32c8ae2a0a81618549314bab237174a46fb216f43809
+    sha256-checksum: <checksum>
 ```
