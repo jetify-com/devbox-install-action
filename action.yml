@@ -130,7 +130,7 @@ runs:
 
     - name: Install nix
       if: inputs.skip-nix-installation == 'false'
-      uses: DeterminateSystems/nix-installer-action@ab6bcb2d5af0e904d04aea750e2089e9dc4cbfdd  # v13
+      uses: DeterminateSystems/nix-installer-action@b92f66560d6f97d6576405a7bae901ab57e72b6a  # v15
       with:
         logger: pretty
         extra-conf: experimental-features = ca-derivations fetch-closure
