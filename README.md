@@ -56,5 +56,5 @@ Here's an example job with all inputs:
     devbox-version: 0.13.4
     disable-nix-access-token: 'false'
     sha256-checksum: <checksum>
-    nix-version: v0.33
+    nix-version: v0.32.3
 ```

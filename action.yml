@@ -103,7 +103,9 @@ runs:
       if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: ~/.local/bin/devbox
+        path: |
+          ~/.local/bin/devbox
+          /usr/local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Workaround nix store cache permission issue
@@ -158,6 +160,15 @@ runs:
       shell: bash
       run: |
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
+    
+    - name: List nix store cache on failure
+      shell: bash
+      if: failure()
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        echo "It is likely that nix has shipped a backwards incompatible change. You can either specify the 'nix-version' flag, or proceed to the actions tab and manually delete the following cache objects:"
+        gh cache list --key ${{ runner.os }}-${{ runner.arch }}-devbox --json key
 
     - name: Save nix store cache
       if: inputs.enable-cache == 'true' && steps.cache-devbox-nix-store.outputs.cache-hit != 'true'
