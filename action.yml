@@ -25,6 +25,9 @@ inputs:
   skip-nix-installation: # 'true' or 'false'
     description: 'Skip the installation of nix'
     default: 'false'
+  nix-version: # version of nix
+    description: 'Specify the version of Nix to install. Default to the latest'
+    default: ''
 
 runs:
   using: "composite"
@@ -133,6 +136,7 @@ runs:
       uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d  # v16
       with:
         logger: pretty
+        source-tag: ${{ inputs.nix-version }}
         extra-conf: experimental-features = ca-derivations fetch-closure
 
     - name: Mount nix store cache
@@ -148,7 +152,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ inputs.nix-version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Install devbox packages
       shell: bash
@@ -167,7 +171,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ inputs.nix-version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Restore tar command
       if: inputs.enable-cache == 'true'
