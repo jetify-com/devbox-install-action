@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-13, macos-14, macos-latest, ubuntu-latest]
-        use-cache: [true, false]
+        enable-cache: ['true', 'false']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,11 +33,14 @@ jobs:
         uses: ./
         with:
           project-path: 'testdata'
-          enable-cache: ${{ matrix.use-cache }}
+          enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-devbox-version:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        enable-cache: ['true', 'false']
     steps:
       - uses: actions/checkout@v4
       - name: Install devbox
@@ -45,10 +48,14 @@ jobs:
         with:
           devbox-version: 0.13.6
           project-path: 'testdata'
+          enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
   
   test-action-with-nix-version:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        enable-cache: ['true', 'false']
     steps:
       - uses: actions/checkout@v4
       - name: Install devbox
@@ -56,6 +63,7 @@ jobs:
         with:
           project-path: 'testdata'
           nix-version: v0.32.3
+          enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum:
