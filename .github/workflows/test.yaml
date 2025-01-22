@@ -50,21 +50,6 @@ jobs:
           project-path: 'testdata'
           enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
-  
-  test-action-with-nix-version:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        enable-cache: ['true', 'false']
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install devbox
-        uses: ./
-        with:
-          project-path: 'testdata'
-          nix-version: v0.32.3
-          enable-cache: ${{ matrix.enable-cache }}
-          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum:
     runs-on: ubuntu-latest
