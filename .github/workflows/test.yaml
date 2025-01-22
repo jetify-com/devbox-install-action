@@ -24,8 +24,8 @@ jobs:
   test-action:
     strategy:
       matrix:
-        os: [macos-12, macos-13, macos-14, macos-latest, ubuntu-latest]
-        use-cache: [true, false]
+        os: [macos-13, macos-14, macos-latest, ubuntu-latest]
+        enable-cache: ['true', 'false']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,18 +33,22 @@ jobs:
         uses: ./
         with:
           project-path: 'testdata'
-          enable-cache: ${{ matrix.use-cache }}
+          enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
-  test-action-with-version:
+  test-action-with-devbox-version:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        enable-cache: ['true', 'false']
     steps:
       - uses: actions/checkout@v4
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.9.1
+          devbox-version: 0.13.6
           project-path: 'testdata'
+          enable-cache: ${{ matrix.enable-cache }}
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum:
@@ -54,10 +58,10 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.9.1
+          devbox-version: 0.13.6
           refresh-cli: true
           project-path: 'testdata'
-          sha256-checksum: 'f58202279237b9e0e7d69ef9334c7ca0628db31e5575f105dad6f41a171ebb6a'
+          sha256-checksum: '22a31081df183aab7b8f88a794505c7c0ae217d6314e61b3e0bfe6972b992199'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
 
   test-action-with-sha256-checksum-failure:
@@ -69,7 +73,7 @@ jobs:
         uses: ./
         continue-on-error: true
         with:
-          devbox-version: 0.9.1
+          devbox-version: 0.13.6
           refresh-cli: true
           sha256-checksum: 'bad-sha'
           project-path: 'testdata'
@@ -85,8 +89,8 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: 0.9.1
+          devbox-version: 0.13.6
           refresh-cli: true
-          sha256-checksum: 'e7793acf6dadecc6a04eb64d6352665698c75f6c9f59fbe3efee3b04dbec294d'
+          sha256-checksum: '169836de22c41a1c68ac5a43e0514d4021137647c7c08ee8bd921faa430ee286'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
