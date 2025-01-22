@@ -100,9 +100,7 @@ runs:
       if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: |
-          ~/.local/bin/devbox
-          /usr/local/bin/devbox
+        path: ~/.local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
 
     - name: Workaround nix store cache permission issue
