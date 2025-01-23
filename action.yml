@@ -140,7 +140,7 @@ runs:
       run: |
         NIX_VERSION_OUTPUT=$(nix --version)
         NIX_VERSION=$(echo "${NIX_VERSION_OUTPUT}" | awk '{print $NF}')
-        echo "nix-version=$NIX_VERSION" >> $GITHUB_ENV
+        echo "nix_version=$NIX_VERSION" >> $GITHUB_ENV
 
     - name: Mount nix store cache
       id: cache-devbox-nix-store
@@ -155,7 +155,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ env.nix-version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ env.nix_version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Install devbox packages
       shell: bash
@@ -183,7 +183,7 @@ runs:
           ~/.nix-profile
           /nix/store
           /nix/var/nix
-        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ env.nix-version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
+        key: ${{ runner.os }}-${{ runner.arch }}-devbox-nix-store-${{ env.nix_version }}-${{ hashFiles(format('{0}/devbox.lock', inputs.project-path)) }}
 
     - name: Restore tar command
       if: inputs.enable-cache == 'true'
