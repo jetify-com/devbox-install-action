@@ -94,6 +94,10 @@ runs:
         fi
         mkdir -p ~/.local/bin
         mv "$DEVBOX_BINARY" ~/.local/bin/devbox
+
+    - name: Add devbox binary to path
+      shell: bash
+      run: |
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Save devbox cli cache
