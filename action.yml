@@ -11,6 +11,9 @@ inputs:
   enable-cache: # 'true' or 'false'
     description: 'Caching the entire Nix store in github based on your devbox.json'
     default: 'false'
+  enable-packages-path: # 'true' or 'false'
+    description: 'Add devbox packages to $PATH'
+    default: 'false'
   refresh-cli: # 'true' or 'false'
     description: 'Specify whether the CLI should be redownloaded'
     default: 'false'
@@ -174,6 +177,11 @@ runs:
       run: |
         echo "It is likely that nix has shipped a backwards incompatible change. Proceed to the actions tab and manually delete the following cache objects:"
         gh cache list --key ${{ runner.os }}-${{ runner.arch }}-devbox --json key
+
+    - name: Adding devbox packages to $PATH
+      if: inputs.enable-packages-path == 'true'
+      shell: bash
+      run: echo '.devbox/virtenv/.wrappers/bin' >> $GITHUB_PATH
 
     - name: Save nix store cache
       if: inputs.enable-cache == 'true' && steps.cache-devbox-nix-store.outputs.cache-hit != 'true'
