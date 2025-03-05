@@ -103,7 +103,7 @@ jobs:
       - name: Install devbox
         uses: ./
         with:
-          devbox-version: http://nightly-ubuntu.dev-jetify.com/
+          devbox-version: https://nightly-ubuntu.dev-jetify.com/
           refresh-cli: true
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
