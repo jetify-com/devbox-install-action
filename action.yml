@@ -15,7 +15,7 @@ inputs:
     description: 'Specify whether the CLI should be redownloaded'
     default: 'false'
   devbox-version: # version of the devbox cli
-    description: 'Specify devbox CLI version you want to pin to. Default to latest'
+    description: 'Specify devbox CLI version you want to pin to. Default to latest release. If version is URL, the URL will be downloaded and used as the devbox binary, assumed to be zipped.'
     default: ''
   sha256-checksum: # the expected SHA256 checksum of the devbox binary.
     description: 'Specify an explicit checksum for the devbox binary. For extra security on top of the existing checks in the devbox launch script'
@@ -35,7 +35,27 @@ runs:
         DEVBOX_USE_VERSION: ${{ inputs.devbox-version }}
       run: |
         if [[ -n $DEVBOX_USE_VERSION ]]; then
-          echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
+          if [[ "$DEVBOX_USE_VERSION" =~ ^https?:// ]]; then
+            # If version is a URL, download and extract it
+            tmp_dir=$(mktemp -d)
+            tmp_zip="${tmp_dir}/devbox.zip"
+            echo "Downloading devbox from URL: $DEVBOX_USE_VERSION"
+            curl --fail --silent --location --output "${tmp_zip}" "${DEVBOX_USE_VERSION}"
+            unzip -q "${tmp_zip}" -d "${tmp_dir}"
+            # Find the devbox binary in the extracted files
+            DEVBOX_BINARY=$(find "${tmp_dir}" -type f -name "devbox")
+            if [[ ! -f "${DEVBOX_BINARY}" ]]; then
+              echo "ERROR: Could not find devbox binary in downloaded archive"
+              exit 1
+            fi
+            mkdir -p ~/.local/bin
+            mv "${DEVBOX_BINARY}" ~/.local/bin/devbox
+            chmod +x ~/.local/bin/devbox
+            rm -rf "${tmp_dir}"
+            echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
+          else
+            echo "latest_version=$DEVBOX_USE_VERSION" >> $GITHUB_ENV
+          fi
         else
           tmp_file=$(mktemp)
           latest_url="https://releases.jetify.com/devbox/stable/version"
