@@ -94,3 +94,16 @@ jobs:
           sha256-checksum: '169836de22c41a1c68ac5a43e0514d4021137647c7c08ee8bd921faa430ee286'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+
+
+  test-action-with-url-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install devbox
+        uses: ./
+        with:
+          devbox-version: https://nightly-ubuntu.dev-jetify.com/
+          refresh-cli: true
+          project-path: 'testdata'
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
