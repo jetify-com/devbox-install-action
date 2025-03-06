@@ -60,6 +60,11 @@ Here's an example job with most inputs:
 
 #### Usage on a GitHub Enterprise Server
 
+On a privately hosted GitHub Enterprise Server, the `github.token` available in the context is not valid for accessing `api.github.com`, 
+which can lead to failures due to the rate-limit for unauthenticated requests. To work around this, you can provide a personal access token
+for `api.github.com` in the `extra-nix-config` input.
+Additionally, it might be necessary to provide a token for your GitHub Enterprise Server, if you are using Nix packages from there.
+
 ```
 - name: Install devbox
   uses: jetify-com/devbox-install-action@v0.13.0
