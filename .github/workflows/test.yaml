@@ -94,3 +94,17 @@ jobs:
           sha256-checksum: '169836de22c41a1c68ac5a43e0514d4021137647c7c08ee8bd921faa430ee286'
           project-path: 'testdata'
           disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+
+  test-action-with-extra-nix-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install devbox with extra nix config "user-agent-suffix = test-suffix"
+        uses: ./
+        with:
+          devbox-version: 0.13.6
+          project-path: 'testdata'
+          extra-nix-config: user-agent-suffix = test-suffix
+      - name: Check nix user-agent-suffix config
+        run: |
+          [[ "$(nix config show user-agent-suffix)" == "test-suffix" ]]
