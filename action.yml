@@ -25,6 +25,9 @@ inputs:
   skip-nix-installation: # 'true' or 'false'
     description: 'Skip the installation of nix'
     default: 'false'
+  extra-nix-config:
+    description: 'Gets appended to `nix.conf` if passed'
+    default: ''
 
 runs:
   using: "composite"
@@ -126,11 +129,18 @@ runs:
         fi
 
     - name: Configure nix access-tokens
-      if: inputs.disable-nix-access-token == 'false'
+      if: inputs.disable-nix-access-token == 'false' && github.server_url == 'https://github.com'
       shell: bash
       run: |
         mkdir -p ~/.config/nix
         echo "access-tokens = github.com=${{ github.token }}" >> ~/.config/nix/nix.conf
+
+    - name: Configure nix extra config
+      if: inputs.extra-nix-config != ''
+      shell: bash
+      run: |
+        mkdir -p ~/.config/nix
+        echo "${{ inputs.extra-nix-config }}" >> ~/.config/nix/nix.conf
 
     - name: Install nix
       if: inputs.skip-nix-installation == 'false'
@@ -165,7 +175,7 @@ runs:
       shell: bash
       run: |
         devbox run --config=${{ inputs.project-path }} -- echo "Packages installed!"
-    
+
     - name: List nix store cache on failure
       shell: bash
       if: failure()
