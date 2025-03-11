@@ -67,7 +67,7 @@ Additionally, it might be necessary to provide a token for your GitHub Enterpris
 
 ```
 - name: Install devbox
-  uses: jetify-com/devbox-install-action@v0.13.0
+  uses: jetify-com/devbox-install-action@v0.12.0
   with:
     extra-nix-config: access-tokens = my-github-enterprise-server.example.com=${{ github.token }} github.com=${{ secrets.MY_GITHUB_COM_TOKEN }}
 ```
