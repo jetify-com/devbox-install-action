@@ -48,7 +48,7 @@ Here's an example job with most inputs:
 
 ```
 - name: Install devbox
-  uses: jetify-com/devbox-install-action@v0.13.0
+  uses: jetify-com/devbox-install-action@v0.12.0
   with:
     project-path: 'path-to-folder'
     enable-cache: 'true'
