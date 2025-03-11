@@ -40,10 +40,11 @@ jobs:
 | sha256-checksum          | Specify an explicit checksum for the devbox binary                                    |                       |
 | disable-nix-access-token | Disable configuration of nix access-tokens with the GitHub token used in the workflow | false                 |
 | skip-nix-installation    | Skip the installation of nix                                                          | false                 |
+| extra-nix-config         | Gets appended to `nix.conf` if passed                                                 |                       |
 
-### Example Configuration
+### Example Configurations
 
-Here's an example job with all inputs:
+Here's an example job with most inputs:
 
 ```
 - name: Install devbox
@@ -55,4 +56,18 @@ Here's an example job with all inputs:
     devbox-version: 0.13.4
     disable-nix-access-token: 'false'
     sha256-checksum: <checksum>
+```
+
+#### Usage on a GitHub Enterprise Server
+
+On a privately hosted GitHub Enterprise Server, the `github.token` available in the context is not valid for accessing `api.github.com`, 
+which can lead to failures due to the rate-limit for unauthenticated requests. To work around this, you can provide a personal access token
+for `api.github.com` in the `extra-nix-config` input.
+Additionally, it might be necessary to provide a token for your GitHub Enterprise Server, if you are using Nix packages from there.
+
+```
+- name: Install devbox
+  uses: jetify-com/devbox-install-action@v0.12.0
+  with:
+    extra-nix-config: access-tokens = my-github-enterprise-server.example.com=${{ github.token }} github.com=${{ secrets.MY_GITHUB_COM_TOKEN }}
 ```
