@@ -20,12 +20,6 @@ inputs:
   nix-build-group-id:
     description: 'GID of the build group'
     default: '30000'
-  proxy:
-    description: 'Proxy URL for downloads'
-    default: ''
-  ssl-cert-file:
-    description: 'Path to SSL certificate file'
-    default: ''
   modify-profile:
     description: 'Modify user profile to set up environment'
     default: 'true'
@@ -41,9 +35,6 @@ inputs:
   trust-runner-user:
     description: 'Add runner user to trusted users'
     default: 'true'
-  flake-registry:
-    description: 'Flake registry URL'
-    default: ''
   channels:
     description: 'Nix channels to add'
     default: 'nixpkgs=https://nixos.org/channels/nixpkgs-unstable'
@@ -65,14 +56,10 @@ runs:
         NIX_INSTALLER_NIX_BUILD_USER_COUNT: ${{ inputs.nix-build-user-count }}
         NIX_INSTALLER_NIX_BUILD_GROUP_NAME: ${{ inputs.nix-build-group-name }}
         NIX_INSTALLER_NIX_BUILD_GROUP_ID: ${{ inputs.nix-build-group-id }}
-        NI_INSTALLER_PROXY: ${{ inputs.proxy }}
-        NIX_INSTALLER_SSL_CERT_FILE: ${{ inputs.ssl-cert-file }}
         NIX_INSTALLER_MODIFY_PROFILE: ${{ inputs.modify-profile }}
-        NIX_INSTALLER_DAEMON: ${{ inputs.daemon }}
         NIX_INSTALLER_INIT: ${{ inputs.init }}
         NIX_INSTALLER_START_DAEMON: ${{ inputs.start-daemon }}
         NIX_INSTALLER_TRUST_RUNNER_USER: ${{ inputs.trust-runner-user }}
-        NIX_INSTALLER_FLAKE_REGISTRY: ${{ inputs.flake-registry }}
         NIX_INSTALLER_CHANNELS: ${{ inputs.channels }}
       run: |
         echo "Installing Nix using experimental installer..."
