@@ -83,7 +83,7 @@ runs:
         
         # Download and run the experimental installer
         curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
-          sh -s -- install
+          sh -s -- install --no-confirm
         
         # Source the nix profile to make nix available in current shell
         if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
