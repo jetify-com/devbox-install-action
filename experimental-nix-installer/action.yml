@@ -20,9 +20,6 @@ inputs:
   nix-build-group-id:
     description: 'GID of the build group'
     default: '30000'
-  nix-package-url:
-    description: 'URL to download Nix package from'
-    default: ''
   proxy:
     description: 'Proxy URL for downloads'
     default: ''
@@ -68,8 +65,7 @@ runs:
         NIX_INSTALLER_NIX_BUILD_USER_COUNT: ${{ inputs.nix-build-user-count }}
         NIX_INSTALLER_NIX_BUILD_GROUP_NAME: ${{ inputs.nix-build-group-name }}
         NIX_INSTALLER_NIX_BUILD_GROUP_ID: ${{ inputs.nix-build-group-id }}
-        NIX_INSTALLER_NIX_PACKAGE_URL: ${{ inputs.nix-package-url }}
-        NIX_INSTALLER_PROXY: ${{ inputs.proxy }}
+        NI_INSTALLER_PROXY: ${{ inputs.proxy }}
         NIX_INSTALLER_SSL_CERT_FILE: ${{ inputs.ssl-cert-file }}
         NIX_INSTALLER_MODIFY_PROFILE: ${{ inputs.modify-profile }}
         NIX_INSTALLER_DAEMON: ${{ inputs.daemon }}
