@@ -144,7 +144,7 @@ runs:
 
     - name: Install nix
       if: inputs.skip-nix-installation == 'false'
-      uses: ./experimental-nix-installer-action.yml
+      uses: ./experimental-nix-installer
       with:
         logger: pretty
         extra-conf: experimental-features = ca-derivations fetch-closure
