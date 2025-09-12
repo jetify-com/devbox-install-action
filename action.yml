@@ -144,7 +144,7 @@ runs:
 
     - name: Install nix
       if: inputs.skip-nix-installation == 'false'
-      uses: ${GITHUB_ACTION_PATH}/experimental-nix-installer
+      uses: ./experimental-nix-installer
       with:
         logger: pretty
         extra-conf: experimental-features = ca-derivations fetch-closure nix-command flakes
