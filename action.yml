@@ -145,6 +145,11 @@ runs:
     - name: Download and install experimental Nix installer
       if: inputs.skip-nix-installation == 'false'
       shell: bash
+      env:
+        NIX_INSTALLER_LOGGER: pretty
+        NIX_INSTALLER_TRUST_RUNNER_USER: true
+        NIX_INSTALLER_MODIFY_PROFILE: true
+        NIX_INSTALLER_START_DAEMON: true
       run: |
         echo "Installing Nix using experimental installer..."
         
