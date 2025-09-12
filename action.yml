@@ -147,7 +147,7 @@ runs:
       uses: ./experimental-nix-installer
       with:
         logger: pretty
-        extra-conf: experimental-features = ca-derivations fetch-closure
+        extra-conf: experimental-features = ca-derivations fetch-closure nix-command flakes
 
     - name: Get nix version
       shell: bash
