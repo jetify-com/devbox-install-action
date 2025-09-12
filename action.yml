@@ -146,10 +146,16 @@ runs:
       if: inputs.skip-nix-installation == 'false'
       shell: bash
       env:
+        NIX_INSTALLER_EXTRA_CONF: experimental-features = ca-derivations fetch-closure nix-command flakes
         NIX_INSTALLER_LOGGER: pretty
-        NIX_INSTALLER_TRUST_RUNNER_USER: true
+        NIX_INSTALLER_NIX_BUILD_USER_COUNT: 32
+        NIX_INSTALLER_NIX_BUILD_GROUP_NAME: nixbld
+        NIX_INSTALLER_NIX_BUILD_GROUP_ID: 30000
         NIX_INSTALLER_MODIFY_PROFILE: true
+        NIX_INSTALLER_INIT: systemd
         NIX_INSTALLER_START_DAEMON: true
+        NIX_INSTALLER_TRUST_RUNNER_USER: true
+        NIX_INSTALLER_CHANNELS: nixpkgs=https://nixos.org/channels/nixpkgs-unstable
       run: |
         echo "Installing Nix using experimental installer..."
         
@@ -167,15 +173,6 @@ runs:
         # Verify installation
         nix --version
         nix-env --version
-
-    - name: Add experimental Nix configuration
-      if: inputs.skip-nix-installation == 'false'
-      shell: bash
-      run: |
-        echo "Adding experimental Nix configuration..."
-        mkdir -p ~/.config/nix
-        echo "experimental-features = ca-derivations fetch-closure nix-command flakes" >> ~/.config/nix/nix.conf
-        echo "Experimental configuration added to nix.conf"
 
     - name: Verify Nix installation
       if: inputs.skip-nix-installation == 'false'
