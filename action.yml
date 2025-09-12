@@ -142,12 +142,46 @@ runs:
         mkdir -p ~/.config/nix
         echo "${{ inputs.extra-nix-config }}" >> ~/.config/nix/nix.conf
 
-    - name: Install nix
+    - name: Download and install experimental Nix installer
       if: inputs.skip-nix-installation == 'false'
-      uses: ./experimental-nix-installer
-      with:
-        logger: pretty
-        extra-conf: experimental-features = ca-derivations fetch-closure nix-command flakes
+      shell: bash
+      run: |
+        echo "Installing Nix using experimental installer..."
+        
+        # Download and run the experimental installer
+        curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
+          sh -s -- install --no-confirm
+        
+        # Source the nix profile to make nix available in current shell
+        if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
+          source ~/.nix-profile/etc/profile.d/nix.sh
+        elif [ -f /etc/profile.d/nix.sh ]; then
+          source /etc/profile.d/nix.sh
+        fi
+        
+        # Verify installation
+        nix --version
+        nix-env --version
+
+    - name: Add experimental Nix configuration
+      if: inputs.skip-nix-installation == 'false'
+      shell: bash
+      run: |
+        echo "Adding experimental Nix configuration..."
+        mkdir -p ~/.config/nix
+        echo "experimental-features = ca-derivations fetch-closure nix-command flakes" >> ~/.config/nix/nix.conf
+        echo "Experimental configuration added to nix.conf"
+
+    - name: Verify Nix installation
+      if: inputs.skip-nix-installation == 'false'
+      shell: bash
+      run: |
+        echo "Verifying Nix installation..."
+        echo "Nix version: $(nix --version)"
+        echo "Nix store info:"
+        nix store info || echo "Store info not available"
+        echo "Nix channels:"
+        nix-channel --list || echo "No channels configured"
 
     - name: Get nix version
       shell: bash
