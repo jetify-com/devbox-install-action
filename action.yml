@@ -28,6 +28,10 @@ inputs:
   extra-nix-config:
     description: 'Gets appended to `nix.conf` if passed'
     default: ''
+  nix-package-url:
+    description: 'URL to a Nix package tarball to install a specific Nix version'
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -156,6 +160,7 @@ runs:
         NIX_INSTALLER_START_DAEMON: true
         NIX_INSTALLER_TRUST_RUNNER_USER: true
         NIX_INSTALLER_CHANNELS: nixpkgs=https://nixos.org/channels/nixpkgs-unstable
+        NIX_INSTALLER_NIX_PACKAGE_URL: ${{ inputs.nix-package-url }}
       run: |
         echo "Installing Nix using experimental installer..."
         
