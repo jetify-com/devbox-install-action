@@ -146,7 +146,7 @@ runs:
         mkdir -p ~/.config/nix
         echo "${{ inputs.extra-nix-config }}" >> ~/.config/nix/nix.conf
 
-    - name: Download and install experimental Nix installer
+    - name: Download and install Nix
       if: inputs.skip-nix-installation == 'false'
       shell: bash
       env:
@@ -161,7 +161,7 @@ runs:
         NIX_INSTALLER_TRUST_RUNNER_USER: true
         NIX_INSTALLER_CHANNELS: nixpkgs=https://nixos.org/channels/nixpkgs-unstable
       run: |
-        echo "Installing Nix using experimental installer..."
+        echo "Installing Nix..."
 
         # Build installer command with optional nix-package-url
         INSTALL_ARGS="install --no-confirm"
@@ -169,8 +169,8 @@ runs:
           INSTALL_ARGS="$INSTALL_ARGS --nix-package-url ${{ inputs.nix-package-url }}"
         fi
 
-        # Download and run the experimental installer
-        curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
+        # Download and run the Determinate Systems installer
+        curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
           sh -s -- $INSTALL_ARGS
 
         # Source the nix profile to make nix available in current shell
