@@ -108,3 +108,38 @@ jobs:
       - name: Check nix user-agent-suffix config
         run: |
           [[ "$(nix config show user-agent-suffix)" == "test-suffix" ]]
+
+  test-nix-versions:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        nix-version: [2.18.0, 2.19.2, 2.24.7, 2.30.2]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install devbox with specific Nix version
+        uses: ./
+        with:
+          project-path: 'testdata'
+          nix-package-url: https://releases.nixos.org/nix/nix-${{ matrix.nix-version }}/nix-${{ matrix.nix-version }}-${{ runner.arch == 'X64' && 'x86_64' || 'aarch64' }}-${{ runner.os == 'macOS' && 'darwin' || 'linux' }}.tar.xz
+          disable-nix-access-token: "${{ github.ref != 'refs/heads/main' }}"
+      - name: Verify Nix version and run devbox commands
+        run: |
+          echo "::group::Nix version"
+          nix --version
+          installed_version=$(nix --version | awk '{print $3}')
+          expected_version="${{ matrix.nix-version }}"
+          if [[ "$installed_version" != "$expected_version" ]]; then
+            echo "ERROR: Expected Nix version $expected_version, but got $installed_version"
+            exit 1
+          fi
+          echo "::endgroup::"
+          echo "::group::Contents of /etc/nix/nix.conf"
+          cat /etc/nix/nix.conf || true
+          echo "::endgroup::"
+          echo "::group::Resolved Nix config"
+          nix show-config --extra-experimental-features nix-command || true
+          echo "::endgroup::"
+          echo "::group::Run devbox commands"
+          devbox run -- echo "Hello from devbox!"
+          echo "::endgroup::"
