@@ -160,21 +160,26 @@ runs:
         NIX_INSTALLER_START_DAEMON: true
         NIX_INSTALLER_TRUST_RUNNER_USER: true
         NIX_INSTALLER_CHANNELS: nixpkgs=https://nixos.org/channels/nixpkgs-unstable
-        NIX_INSTALLER_NIX_PACKAGE_URL: ${{ inputs.nix-package-url }}
       run: |
         echo "Installing Nix using experimental installer..."
-        
+
+        # Build installer command with optional nix-package-url
+        INSTALL_ARGS="install --no-confirm"
+        if [[ -n "${{ inputs.nix-package-url }}" ]]; then
+          INSTALL_ARGS="$INSTALL_ARGS --nix-package-url ${{ inputs.nix-package-url }}"
+        fi
+
         # Download and run the experimental installer
         curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
-          sh -s -- install --no-confirm
-        
+          sh -s -- $INSTALL_ARGS
+
         # Source the nix profile to make nix available in current shell
         if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
           source ~/.nix-profile/etc/profile.d/nix.sh
         elif [ -f /etc/profile.d/nix.sh ]; then
           source /etc/profile.d/nix.sh
         fi
-        
+
         # Verify installation
         nix --version
         nix-env --version
