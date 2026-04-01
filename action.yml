@@ -28,7 +28,9 @@ inputs:
   extra-nix-config:
     description: 'Gets appended to `nix.conf` if passed'
     default: ''
-
+  installer-init-system:
+    description: 'The init system to use for the nix installer'
+    default: 'systemd'
 runs:
   using: "composite"
   steps:
@@ -152,24 +154,24 @@ runs:
         NIX_INSTALLER_NIX_BUILD_GROUP_NAME: nixbld
         NIX_INSTALLER_NIX_BUILD_GROUP_ID: 30000
         NIX_INSTALLER_MODIFY_PROFILE: true
-        NIX_INSTALLER_INIT: systemd
+        NIX_INSTALLER_INIT: ${{ inputs.installer-init-system }}
         NIX_INSTALLER_START_DAEMON: true
         NIX_INSTALLER_TRUST_RUNNER_USER: true
         NIX_INSTALLER_CHANNELS: nixpkgs=https://nixos.org/channels/nixpkgs-unstable
       run: |
         echo "Installing Nix using experimental installer..."
-        
+
         # Download and run the experimental installer
         curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
           sh -s -- install --no-confirm
-        
+
         # Source the nix profile to make nix available in current shell
         if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
           source ~/.nix-profile/etc/profile.d/nix.sh
         elif [ -f /etc/profile.d/nix.sh ]; then
           source /etc/profile.d/nix.sh
         fi
-        
+
         # Verify installation
         nix --version
         nix-env --version
