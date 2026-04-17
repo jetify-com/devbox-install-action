@@ -108,3 +108,13 @@ jobs:
       - name: Check nix user-agent-suffix config
         run: |
           [[ "$(nix config show user-agent-suffix)" == "test-suffix" ]]
+
+  test-action-with-no-init-system:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install devbox with no init system
+        uses: ./
+        with:
+          project-path: 'testdata'
+          installer-init-system: none
