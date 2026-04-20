@@ -58,7 +58,7 @@ runs:
     - name: Mount devbox cli cache
       if: inputs.refresh-cli == 'false'
       id: cache-devbox-cli
-      uses: actions/cache/restore@cdf6c1fa76f9f475f3d7449005a359c84ca0f306  # v5
+      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5
       with:
         path: ~/.local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
@@ -107,7 +107,7 @@ runs:
 
     - name: Save devbox cli cache
       if: inputs.refresh-cli == 'false' && steps.cache-devbox-cli.outputs.cache-hit != 'true'
-      uses: actions/cache/save@cdf6c1fa76f9f475f3d7449005a359c84ca0f306  # v5
+      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5
       with:
         path: ~/.local/bin/devbox
         key: ${{ runner.os }}-${{ runner.arch }}-devbox-cli-${{ env.latest_version }}
@@ -197,7 +197,7 @@ runs:
     - name: Mount nix store cache
       id: cache-devbox-nix-store
       if: inputs.enable-cache == 'true'
-      uses: actions/cache/restore@cdf6c1fa76f9f475f3d7449005a359c84ca0f306  # v5
+      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5
       with:
         path: |
           ~/.cache/devbox
@@ -225,7 +225,7 @@ runs:
 
     - name: Save nix store cache
       if: inputs.enable-cache == 'true' && steps.cache-devbox-nix-store.outputs.cache-hit != 'true'
-      uses: actions/cache/save@cdf6c1fa76f9f475f3d7449005a359c84ca0f306  # v5
+      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5
       with:
         path: |
           ~/.cache/devbox
