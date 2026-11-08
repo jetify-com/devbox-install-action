@@ -24,7 +24,7 @@ jobs:
   test-action:
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-latest, ubuntu-latest]
+        os: [macos-15, macos-26, macos-latest, ubuntu-latest]
         enable-cache: ['true', 'false']
     runs-on: ${{ matrix.os }}
     steps:
