@@ -64,9 +64,16 @@ runs:
       run: |
         echo "Installing Nix using experimental installer..."
         
-        # Download and run the experimental installer
-        curl --proto '=https' --tlsv1.2 -sSf -L https://artifacts.nixos.org/experimental-installer | \
-          sh -s -- install --no-confirm
+        # Download the experimental installer, retrying transient failures
+        # (e.g. 5xx/timeouts from artifacts.nixos.org). Save it to a file
+        # instead of piping into sh so an interrupted download can never run
+        # a truncated script.
+        installer="$(mktemp)"
+        curl --proto '=https' --tlsv1.2 -sSf -L \
+          --retry 5 --retry-delay 10 --retry-all-errors --connect-timeout 30 \
+          -o "${installer}" https://artifacts.nixos.org/experimental-installer
+        sh "${installer}" install --no-confirm
+        rm -f "${installer}"
         
         # Source the nix profile to make nix available in current shell
         if [ -f ~/.nix-profile/etc/profile.d/nix.sh ]; then
